@@ -1,0 +1,43 @@
+services:
+  app1:
+    build: .
+    container_name: app1
+    networks:
+      rede_a:
+        ipv4_address: 192.170.0.2
+
+  db1:
+    build: .
+    container_name: db1
+    networks:
+      rede_a:
+        ipv4_address: 192.170.0.3
+
+  app2:
+    build: .
+    container_name: app2
+    networks:
+      rede_b:
+        ipv4_address: 192.171.0.2
+
+  db2:
+    build: .
+    container_name: db2
+    networks:
+      rede_b:
+        ipv4_address: 192.171.0.3
+
+networks:
+  rede_a:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.170.0.0/24
+          gateway: 192.170.0.1
+
+  rede_b:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.171.0.0/24
+          gateway: 192.171.0.1
