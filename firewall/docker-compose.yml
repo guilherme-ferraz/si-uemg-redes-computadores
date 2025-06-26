@@ -1,0 +1,38 @@
+services:
+  servidor:
+    build: .
+    container_name: servidor
+    restart: always
+    ports:
+    - "8001:80"
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    privileged: true
+    networks:
+      rede_teste_firewall:
+        ipv4_address: 192.173.0.100
+
+  cliente1:
+    build: .
+    container_name: cliente1
+    restart: always
+    networks:
+      rede_teste_firewall:
+        ipv4_address: 192.173.0.3
+
+  cliente2:
+    build: .
+    container_name: cliente2
+    restart: always
+    networks:
+      rede_teste_firewall:
+        ipv4_address: 192.173.0.4
+
+networks:
+  rede_teste_firewall:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.173.0.0/24
+          gateway: 192.173.0.1
