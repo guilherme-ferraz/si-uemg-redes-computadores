@@ -1,0 +1,31 @@
+services:
+  captive-dns:
+    image: andyshinn/dnsmasq:latest
+    container_name: captive-dns
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./dnsmasq/dnsmasq.conf:/etc/dnsmasq.conf:ro
+    networks:
+      pub_net:
+        ipv4_address: 192.168.0.200
+
+  captive-portal:
+    build: ./flask
+    container_name: captive-portal
+    volumes:
+      - ./logs:/var/log/captive
+    restart: unless-stopped
+    networks:
+      pub_net:
+        ipv4_address: 192.168.0.201
+
+networks:
+  pub_net:
+    driver: macvlan
+    driver_opts:
+      parent: enp3s0   # interface LAN cabeada conectada ao roteador
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24
+          gateway: 192.168.0.1
